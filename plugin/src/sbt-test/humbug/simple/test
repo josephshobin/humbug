@@ -1,0 +1,3 @@
+> compile
+$ exists target/scala-2.10/src_managed/main/au/com/cba/omnia/humbug/test/Customer.scala
+$ exists target/scala-2.10/src_managed/main/au/com/cba/omnia/humbug/test/Large.scala
