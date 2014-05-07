@@ -8,6 +8,7 @@ cache:
 install:
 - git clone https://omnia-bamboo:$OMNIA_CI_PASSWORD@github.com/CommBank/ci.git
 - ci/sbt-setup.sh
+- ci/sbt-setup-version.sh
 script:
 - sbt -Dsbt.global.base=$TRAVIS_BUILD_DIR/ci '; test; package; scripted'
 - ci/sbt-deploy.sh core generator

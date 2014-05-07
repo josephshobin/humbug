@@ -15,9 +15,7 @@ object build extends Build {
     "compile-thrift", "generate thrift needed for tests")
 
   lazy val standardSettings: Seq[Sett] =
-    Defaults.defaultSettings ++ Seq[Sett](
-      version in ThisBuild := "0.1.1"
-    ) ++ uniqueVersionSettings ++ uniformDependencySettings
+    Defaults.defaultSettings ++ uniformDependencySettings
 
   lazy val core = Project(
     id = "core",
