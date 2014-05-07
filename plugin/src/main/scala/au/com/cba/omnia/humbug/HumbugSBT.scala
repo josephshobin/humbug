@@ -82,6 +82,7 @@ object HumbugSBT extends Plugin {
     humbugThriftExternalSourceFolder <<= (target) { _ / "thrift_external" },
     humbugThriftOutputFolder <<= (sourceManaged) { identity },
     humbugThriftDependencies := Seq(),
+    humbugIsDirty := true,
 
     // complete list of source files
     humbugThriftSources <<= (
@@ -122,28 +123,6 @@ object HumbugSBT extends Plugin {
         }
       }
       paths.filter(_.isDefined).map(_.get)
-    },
-
-    // look at includes and our sources to see if anything is newer than any of our output files
-    humbugIsDirty <<= (
-      streams,
-      humbugThriftSources,
-      humbugThriftOutputFolder
-    ) map { (out, sources, outputDir) =>
-      // figure out if we need to actually rebuild, based on mtimes.
-      val sourcesLastModified: Seq[Long] = sources.map(_.lastModified)
-      val newestSource = if (sourcesLastModified.size > 0) {
-        sourcesLastModified.max
-      } else {
-        Long.MaxValue
-      }
-      val outputsLastModified = (outputDir ** "*.scala").get.map(_.lastModified)
-      val oldestOutput = if (outputsLastModified.size > 0) {
-        outputsLastModified.min
-      } else {
-        Long.MinValue
-      }
-      oldestOutput < newestSource
     },
 
     // actually run humbug
