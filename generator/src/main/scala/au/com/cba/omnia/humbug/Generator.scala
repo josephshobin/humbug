@@ -150,7 +150,7 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
   }
 
   def generateEquals(field: Field) = s"this.${varName(field)} == that.${varName(field)}"
-  def generateToString(field: Field) = s"this.${varName(field)}.toString"
+  def generateToString(field: Field) = s"this.${varName(field)}"
 
 
   def varName(field: Field) = field.sid.toCamelCase.fullName
