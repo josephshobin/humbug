@@ -25,8 +25,7 @@ object Generator {
     )
     val path = namespace.cata(_.toLowerCase.fullName.replaceAll("\\.", "/") + s"/$className.scala", s"$className.scala")
  
-    path -> s"""
-$pck
+    path -> s"""$pck
 
 import org.apache.thrift.protocol.{TProtocol, TProtocolException, TStruct, TField, TType}
 
@@ -57,6 +56,9 @@ ${fields.map(generateFieldWriteAccess).mkString("\n")}
 }
 
 object $className extends ThriftStructCodec3[$className] {
+  val struct = new TStruct("$className")
+  ${fields.map(generateFieldVals).mkString("\n  ")}
+
   override def encode(_item: $className, _oproto: TProtocol): Unit =
     _item.write(_oproto)
 
@@ -152,6 +154,16 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
   def generateEquals(field: Field) = s"this.${varName(field)} == that.${varName(field)}"
   def generateToString(field: Field) = s"this.${varName(field)}"
 
+  def generateFieldVals(field: Field) = {
+    val ttype    = "TType." + constType(field)
+    val origName = field.originalName
+    val name = field.sid.toTitleCase.fullName +  "Field"
+    val manifestName = name +  "Manifest"
+    val typ  = scalaType(field)
+
+    s"""val $name = new TField("$origName", $ttype, ${field.index})
+  val $manifestName = implicitly[Manifest[$typ]]"""
+  }
 
   def varName(field: Field) = field.sid.toCamelCase.fullName
   def writeFieldName(field: Field) = "write" + field.sid.toTitleCase.fullName
