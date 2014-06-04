@@ -26,7 +26,7 @@ object build extends Build {
         Seq[Sett](
           libraryDependencies ++= 
             Seq(
-              "com.twitter"      %% "scrooge-core"        % "depend.versions.scrooge",
+              "com.twitter"      %% "scrooge-core"        % depend.versions.scrooge,
               "org.apache.thrift" % "libthrift"           % "0.8.0" % "provided"
             )
         )
@@ -43,8 +43,8 @@ object build extends Build {
       Seq[Sett](
         libraryDependencies ++= depend.scalaz() ++ depend.testing() ++
           Seq(
-            "com.twitter"      %% "scrooge-generator"  % "depend.versions.scrooge",
-            "com.twitter"      %% "bijection-scrooge"  % "depend.versions.bijection"                        % "test",
+            "com.twitter"      %% "scrooge-generator"  % depend.versions.scrooge,
+            "com.twitter"      %% "bijection-scrooge"  % depend.versions.bijection      % "test",
             "au.com.cba.omnia" %% "omnia-test"         % "2.1.0-20140604032817-d3b19f6" % "test"
           )
       )
