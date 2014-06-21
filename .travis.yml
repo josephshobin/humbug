@@ -6,17 +6,17 @@ cache:
   - $HOME/.ivy2
   - $HOME/.m2
 install:
-- git clone https://omnia-bamboo:$OMNIA_CI_PASSWORD@github.com/CommBank/ci.git
+- git clone https://github.com/CommBank/ci.git
+- chmod ugo+x ci/*
 - ci/sbt-setup.sh
 - ci/sbt-setup-version.sh
 script:
 - sbt -Dsbt.global.base=$TRAVIS_BUILD_DIR/ci '; test; package; scripted'
+after_script:
 - ci/sbt-deploy.sh core generator
 - ci/sbt-deploy-ivy.sh plugin
-after_script:
 - rm -rf ci
 - find $HOME/.ivy2 -name "*humbug*" -delete
 env:
   global:
-  - secure: ij954xvE097fb77WFu6b0k7nxqrR7UYhO+x4aOtbwhVhd4vNTutDyKpFQ8xCnr1iHbGSwBS64J3LfQoF6SxYHAy7drlOpUSU4xXgx10CsJXiCH4ZYhkalcSmbWopdO5V264rPXbqRbrwgGV4NOMT1owFBwfjZ1jW2LAsVWEazxs=
-  - secure: iY1/5WvvYQxOlz22VL3T1g6R3gSs0mp0ZhRRdu60/4HGyhAd3KYWbJX3IUW6ldDioqUM8344VB8utc9bgk6EllhkB9gD5eChALr2O+KyfwiprudYUXOqwfwLIBWZETirYQpG+K1oFTtHrXZIrA1qAh0Zw7s/kY3FFsUg7nQXb2k=
+    secure: G9zfa2fM5+gYpDbLItDM9OQnCTgEW+KE3Yh6D0GP7TEuGVcOlNyTWOA+Z1u5xBu5l4SrgrpuKiTeTYuiHlxiCwX2PWOoNOG8pd0muTl/x0RYpZjuJNPNbdUQ3MtC48k4HBuAsQYW0hLsdwF9kMRFoFZkJqzrFNclIgldz7Rvbh4=
