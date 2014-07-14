@@ -1,0 +1,4 @@
+name: humbug
+exclude: [Gemfile]
+markdown: kramdown
+releaseVersion:  "0.2.0-20140714070337-a40c1b1"
