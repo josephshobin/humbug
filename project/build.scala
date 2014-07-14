@@ -12,38 +12,49 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
-import sbt._
-import Keys._
+import sbt._, Keys._
 
 import au.com.cba.omnia.uniform.core.standard.StandardProjectPlugin._
 import au.com.cba.omnia.uniform.core.version.UniqueVersionPlugin._
 import au.com.cba.omnia.uniform.dependency.UniformDependencyPlugin._
 import au.com.cba.omnia.uniform.assembly.UniformAssemblyPlugin._
 
-import sbtassembly.Plugin._, AssemblyKeys._
-
 object build extends Build {
-  type Sett = Project.Setting[_]
-
   val compileThrift = TaskKey[Seq[File]](
     "compile-thrift", "generate thrift needed for tests")
 
-  lazy val standardSettings: Seq[Sett] =
-    Defaults.defaultSettings ++ uniformDependencySettings
+  lazy val standardSettings =
+    Defaults.defaultSettings ++
+    uniformDependencySettings ++
+    uniform.docSettings("https://github.com/CommBank/humbug")
+
+  lazy val all = Project(
+    id = "all",
+    base = file("."),
+    settings =
+      standardSettings ++
+      uniform.project("humbug-all", "au.com.cba.omnia.humbug.all") ++
+      uniform.ghsettings ++
+      Seq(
+        publishArtifact := false
+      ),
+    aggregate = Seq(core, generator, plugin)
+    )
 
   lazy val core = Project(
     id = "core",
     base = file("core"),
     settings =
       standardSettings ++
-        uniform.project("humbug-core", "au.com.cba.omnia") ++
-        Seq[Sett](
-          libraryDependencies ++= 
-            Seq(
-              "com.twitter"      %% "scrooge-core"        % depend.versions.scrooge,
-              "org.apache.thrift" % "libthrift"           % "0.8.0" % "provided"
-            )
-        )
+      uniform.project("humbug-core", "au.com.cba.omnia.humbug") ++
+      uniform.ghsettings ++
+      Seq(
+        libraryDependencies ++=
+          Seq(
+            "com.twitter"      %% "scrooge-core"        % depend.versions.scrooge,
+            "org.apache.thrift" % "libthrift"           % "0.8.0" % "provided"
+          )
+      )
   )
 
   lazy val generator = Project(
@@ -51,10 +62,10 @@ object build extends Build {
     base = file("generator"),
     settings =
       standardSettings ++
-      uniform.project("humbug-generator", "au.com.cba.omnia") ++
-      (uniformAssemblySettings: Seq[Sett]) ++
+      uniform.project("humbug-generator", "au.com.cba.omnia.humbug.generator") ++
+      uniformAssemblySettings ++
       inConfig(Test)(thriftSettings) ++
-      Seq[Sett](
+      Seq(
         libraryDependencies ++= depend.scalaz() ++ depend.testing() ++
           Seq(
             "com.twitter"      %% "scrooge-generator"  % depend.versions.scrooge,
@@ -69,12 +80,12 @@ object build extends Build {
     base = file("plugin"),
     settings =
       standardSettings ++
-      uniform.project("humbug-plugin", "au.com.cba.omnia")
+      uniform.project("humbug-plugin", "au.com.cba.omnia.humbug.plugin")
   ).settings(
     sbtPlugin := true
   ).dependsOn(generator)
 
-  val thriftSettings: Seq[Sett] = Seq(
+  val thriftSettings = Seq(
     compileThrift <<= (
       streams,
       baseDirectory,
