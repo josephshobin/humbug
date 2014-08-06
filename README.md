@@ -13,7 +13,7 @@ Due to the JVM limit of only having methods with less than 255 parameters the Sc
 Usage
 -----
 
-See https://commbank.github.com.io/humbug
+See https://commbank.github.io/humbug
 
 Example
 -------
