@@ -47,7 +47,7 @@ import com.twitter.scrooge.{ThriftStruct, ThriftStructCodec3}
 
 import au.com.cba.omnia.humbug.HumbugThriftStruct
 
-class $className  extends ThriftStruct with java.io.Serializable with HumbugThriftStruct {
+class $className  extends ThriftStruct with Product with java.io.Serializable with HumbugThriftStruct {
   import $className._
 
   ${fields.map(generateFieldMembers).mkString("\n  ")}
@@ -59,12 +59,23 @@ ${fields.map(generateFieldWriteAccess).mkString("\n")}
     _oprot.writeStructEnd()
   }
 
+  def productArity: Int = ${fields.length}
+
+  def productElement(n: Int): Any = n match {
+    ${fields.map(generateProductElement).mkString("\n    ")}
+    case _ => throw new IndexOutOfBoundsException(n.toString)
+  }
+
   override def equals(other: Any) = other match {
     case null => false
     case that: $className =>
       List(${fields.map(f => "this." + varName(f)).mkString(", ")}) == List(${fields.map(f => "that." + varName(f)).mkString(", ")})
     case _ => false
   }
+
+  override def canEqual(other: Any) = other.isInstanceOf[$className]
+
+  override def hashCode(): Int = scala.util.hashing.MurmurHash3.productHash(this)
 
   override def toString: String = "$className(" + ${fields.map(generateToString)}.mkString(", ") + ")"
 }
@@ -164,6 +175,9 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
       )
     )}"""
   }
+
+  def generateProductElement(field: Field) = 
+    s"case ${field.index - 1} => _${field.index}"
 
   def generateEquals(field: Field) = s"this.${varName(field)} == that.${varName(field)}"
   def generateToString(field: Field) = s"this.${varName(field)}"
