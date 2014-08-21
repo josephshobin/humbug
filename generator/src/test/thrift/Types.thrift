@@ -22,4 +22,6 @@ struct Types {
   5: i64     longField
   6: double  doubleField
   7: byte    byteField
+  8: optional string optStringField
+  9: optional double optDoubleField
 }

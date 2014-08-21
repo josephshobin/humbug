@@ -22,8 +22,8 @@ struct Large {
   5: i64     longField
   6: double  doubleField
   7: byte    byteField
-  8: string field8
-  9: string field9
+  8: optional string field8
+  9: optional string field9
   10: string field10
   11: string field11
   12: string field12

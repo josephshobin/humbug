@@ -157,18 +157,23 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
 
   def generateFieldWriteCode(field: Field) = {
     s"""  private def ${writeFieldName(field)}(item: ${scalaType(field)}, _oprot: TProtocol): Unit = {
+    ${if (optional(field)) "item.foreach { item => " else ""}
     _oprot.writeFieldBegin(new TField("${field.originalName}", TType.${constType(field)}, ${field.index}))
     _oprot.${writeThriftName(field)}(item)
     _oprot.writeFieldEnd()
+    ${if (optional(field)) "}" else ""}
   }
   """
   }
 
   def generateFieldReadCode(field: Field) = {
     val ttype = "TType." + constType(field)
+    val read  =
+      if (optional(field)) s"Option(_iprot.${readThriftName(field)})"
+      else                 s"_iprot.${readThriftName(field)}"
     
     s"""  private def ${readFieldName(field)}(_typ: Byte, _iprot: TProtocol): ${scalaType(field)} = _typ match {
-    case $ttype => _iprot.${readThriftName(field)}
+    case $ttype => $read
     case _actualType => throw new TProtocolException(
       "Received wrong type for field ${field.originalName} (expected=$ttype, actual=%s).".format(
         ttypeToHuman(_actualType)
@@ -183,11 +188,11 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
   def generateToString(field: Field) = s"this.${varName(field)}"
 
   def generateFieldVals(field: Field) = {
-    val ttype    = "TType." + constType(field)
-    val origName = field.originalName
-    val name = field.sid.toTitleCase.fullName +  "Field"
+    val ttype        = "TType." + constType(field)
+    val origName     = field.originalName
+    val name         = field.sid.toTitleCase.fullName +  "Field"
     val manifestName = name +  "Manifest"
-    val typ  = scalaType(field)
+    val typ          = rawType(field)
 
     s"""val $name = new TField("$origName", $ttype, ${field.index})
   val $manifestName = implicitly[Manifest[$typ]]"""
@@ -196,8 +201,15 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
   def varName(field: Field) = field.sid.toCamelCase.fullName
   def writeFieldName(field: Field) = "write" + field.sid.toTitleCase.fullName
   def readFieldName(field: Field) = "read" + field.sid.toTitleCase.fullName
+  def optional(field: Field) = field.requiredness.isOptional
 
-  def scalaType(field: Field) = field.fieldType match {
+  def scalaType(field: Field) = {
+    val typ = rawType(field)
+    if (optional(field)) s"Option[$typ]"
+    else                 typ
+  }
+
+  def rawType(field: Field) = field.fieldType match {
     case TBool   => "Boolean"
     case TByte   => "Byte"
     case TI16    => "Short"
@@ -219,11 +231,15 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
     case t       => throw new Exception(s"Unsupported field type: $t")
   }
 
-  def defaultValue(field: Field) = field.fieldType match {
-    case TBool => "false"
-    case TByte | TI16 | TI32 | TI64 => "0"
-    case TDouble => "0.0"
-    case _ => "null"
+  def defaultValue(field: Field) = {
+    val default = field.fieldType match {
+      case TBool => "false"
+      case TByte | TI16 | TI32 | TI64 => "0"
+      case TDouble => "0.0"
+      case _ => "null"
+    }
+
+    if (optional(field)) "None" else default
   }
 
   def readThriftName(field: Field)  = "read" + field.fieldType.toString.tail

@@ -23,22 +23,26 @@ import org.scalacheck._, Arbitrary._
 
 object Arbitraries {
   implicit def TypesArbitrary: Arbitrary[Types] = Arbitrary((
-    arbitrary[String]  |@|
-    arbitrary[Boolean] |@|
-    arbitrary[Short]   |@|
-    arbitrary[Int]     |@|
-    arbitrary[Long]    |@|
-    arbitrary[Double]  |@|
-    arbitrary[Byte]
-  ){ case (string, boolean, short, int, long, double, byte) =>
+    arbitrary[String]         |@|
+    arbitrary[Boolean]        |@|
+    arbitrary[Short]          |@|
+    arbitrary[Int]            |@|
+    arbitrary[Long]           |@|
+    arbitrary[Double]         |@|
+    arbitrary[Byte]           |@|
+    arbitrary[Option[String]] |@|
+    arbitrary[Option[Double]]
+  ){ case (string, boolean, short, int, long, double, byte, optString, optDouble) =>
       val types = new Types()
-      types.stringField = string
-      types.booleanField = boolean
-      types.shortField = short
-      types.intField = int
-      types.longField = long
-      types.doubleField = double
-      types.byteField = byte
+      types.stringField    = string
+      types.booleanField   = boolean
+      types.shortField     = short
+      types.intField       = int
+      types.longField      = long
+      types.doubleField    = double
+      types.byteField      = byte
+      types.optStringField = optString
+      types.optDoubleField = optDouble
 
       types
   })

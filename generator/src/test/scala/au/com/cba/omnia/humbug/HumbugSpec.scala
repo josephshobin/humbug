@@ -34,7 +34,7 @@ Humbug
 
 """
 
-  implicit val codec = CompactScalaCodec[Types](Types)
+  implicit val codec      = CompactScalaCodec[Types](Types)
   implicit val codecLarge = CompactScalaCodec[Large](Large)
 
   def roundtrip = prop { (c: Types) =>
@@ -42,7 +42,7 @@ Humbug
   }
 
   def productElement = prop { (c: Types) =>
-    c.productArity must_== 7
+    c.productArity must_== 9
 
     c.productElement(0) must_== c.stringField
     c.productElement(1) must_== c.booleanField
@@ -51,6 +51,8 @@ Humbug
     c.productElement(4) must_== c.longField
     c.productElement(5) must_== c.doubleField
     c.productElement(6) must_== c.byteField
+    c.productElement(7) must_== c.optStringField
+    c.productElement(8) must_== c.optDoubleField
   }
 
   def large = {
@@ -67,8 +69,8 @@ Humbug
     x._5 = 5L
     x._6 = 6.0
     x._7 = 7
-    x._8 = "8"
-    x._9 = "9"
+    x._8 = None
+    x._9 = Some("9")
     x._10 = "10"
     x._11 = "11"
     x._12 = "12"
