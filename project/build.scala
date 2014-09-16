@@ -70,8 +70,8 @@ object build extends Build {
         libraryDependencies ++= depend.scalaz() ++ depend.testing() ++
           Seq(
             "com.twitter"      %% "scrooge-generator"  % depend.versions.scrooge,
-            "com.twitter"      %% "bijection-scrooge"  % depend.versions.bijection      % "test",
-            "au.com.cba.omnia" %% "omnia-test"         % "2.1.0-20150113040614-4f96d2b" % "test"
+            "com.twitter"      %% "bijection-scrooge"  % depend.versions.bijection           % "test",
+            "au.com.cba.omnia" %% "omnia-test"         % "2.2.0-20150211055522-e3a0d99-CDH5" % "test"
           )
       )
   ).dependsOn(core)
