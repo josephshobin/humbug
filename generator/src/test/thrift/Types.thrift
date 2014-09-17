@@ -25,3 +25,17 @@ struct Types {
   8: optional string optStringField
   9: optional double optDoubleField
 }
+
+struct Listish {
+  1: i16 short
+  2: list<string> list
+}
+
+struct Mapish {
+  1: i32 int
+  2: map<string, i32> map
+}
+
+struct Nested {
+  1: map<string, list<i32>> map
+}

@@ -41,7 +41,11 @@ object Generator {
  
     path -> s"""$pck
 
-import org.apache.thrift.protocol.{TProtocol, TProtocolException, TStruct, TField, TType}
+import scala.collection.Map
+import scala.collection.immutable.{Map => _}
+import scala.collection.mutable.{ArrayBuffer, HashMap}
+
+import org.apache.thrift.protocol.{TProtocol, TProtocolException, TStruct, TField, TType, TList, TMap}
 
 import com.twitter.scrooge.{ThriftStruct, ThriftStructCodec3}
 
@@ -158,19 +162,44 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
   def generateFieldWriteCode(field: Field) = {
     s"""  private def ${writeFieldName(field)}(item: ${scalaType(field)}, _oprot: TProtocol): Unit = {
     ${if (optional(field)) "item.foreach { item => " else ""}
-    _oprot.writeFieldBegin(new TField("${field.originalName}", TType.${constType(field)}, ${field.index}))
-    _oprot.${writeThriftName(field)}(item)
+    _oprot.writeFieldBegin(new TField("${field.originalName}", TType.${constType(field.fieldType)}, ${field.index}))
+    ${generateElementWriteCode("item", field.fieldType)}
     _oprot.writeFieldEnd()
     ${if (optional(field)) "}" else ""}
   }
   """
   }
 
+  def generateElementWriteCode(name: String, typ: FieldType): String = typ match {
+    case TByte | TI16 | TI32 | TI64 | TDouble | TBool | TString =>
+      s"_oprot.${writeThriftName(typ)}($name)"
+    case ListType(eltType, _) =>
+      val innerVal   = name + "Elem"
+      val innerWrite = generateElementWriteCode(innerVal, eltType)
+      s"""
+      _oprot.writeListBegin(new TList(TType.${constType(eltType)}, ${name}.size))
+      ${name}.foreach {$innerVal => $innerWrite }
+      _oprot.writeListEnd()
+      """
+    case MapType(keyType, valType, _) =>
+      val keyWrite = generateElementWriteCode("_key", keyType)
+      val valWrite = generateElementWriteCode("_val", valType)
+      s"""
+       _oprot.writeMapBegin(new TMap(TType.${constType(keyType)}, TType.${constType(valType)}, ${name}.size))
+       $name.foreach { case (_key, _val) => 
+         $keyWrite
+         $valWrite
+       }
+       _oprot.writeMapEnd()
+      """
+    case t => throw new Exception(s"Unsupported field type: $t")
+  }
+
   def generateFieldReadCode(field: Field) = {
-    val ttype = "TType." + constType(field)
+    val ttype = "TType." + constType(field.fieldType)
     val read  =
-      if (optional(field)) s"Option(_iprot.${readThriftName(field)})"
-      else                 s"_iprot.${readThriftName(field)}"
+      if (optional(field)) s"Option(${generateElementReadCode(field.fieldType)})"
+      else                 generateElementReadCode(field.fieldType)
     
     s"""  private def ${readFieldName(field)}(_typ: Byte, _iprot: TProtocol): ${scalaType(field)} = _typ match {
     case $ttype => $read
@@ -181,6 +210,52 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
     )}"""
   }
 
+  def generateElementReadCode(typ: FieldType): String = typ match {
+    case TByte | TI16 | TI32 | TI64 | TDouble | TBool | TString =>
+      s"_iprot.${readThriftName(typ)}"
+    case ListType(eltType, _) =>
+      // Follow same  behaviour as scrooge which is why we use mutable data structures.
+      s"""
+      val _list = _iprot.readListBegin()
+      if (_list.size == 0) {
+        _iprot.readListEnd()
+        Nil
+      } else {
+        val _rv = new ArrayBuffer[${rawType(eltType)}](_list.size)
+        var _i  = 0
+        while (_i < _list.size) {
+          _rv += { ${generateElementReadCode(eltType)} }
+          _i  += 1
+        }
+        _iprot.readListEnd()
+        _rv
+      }
+      """
+    case MapType(keyType, valType, _) =>
+      // Follow same  behaviour as scrooge which is why we use mutable data structures.
+      val kt = rawType(keyType)
+      val vt = rawType(valType)
+      s"""
+      val _map = _iprot.readMapBegin()
+      if (_map.size == 0) {
+        _iprot.readMapEnd()
+        Map.empty[$kt, $vt]
+      } else {
+        val _rv = new HashMap[$kt, $vt]
+        var _i = 0
+        while (_i < _map.size) {
+          val _key   = { ${generateElementReadCode(keyType)} }
+          val _value = { ${generateElementReadCode(valType)} }
+          _rv(_key) = _value
+          _i += 1
+        }
+        _iprot.readMapEnd()
+        _rv
+      }
+      """
+    case t => throw new Exception(s"Unsupported field type: $t")
+  }
+
   def generateProductElement(field: Field) = 
     s"case ${field.index - 1} => _${field.index}"
 
@@ -188,11 +263,11 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
   def generateToString(field: Field) = s"this.${varName(field)}"
 
   def generateFieldVals(field: Field) = {
-    val ttype        = "TType." + constType(field)
+    val ttype        = "TType." + constType(field.fieldType)
     val origName     = field.originalName
     val name         = field.sid.toTitleCase.fullName +  "Field"
     val manifestName = name +  "Manifest"
-    val typ          = rawType(field)
+    val typ          = rawType(field.fieldType)
 
     s"""val $name = new TField("$origName", $ttype, ${field.index})
   val $manifestName = implicitly[Manifest[$typ]]"""
@@ -204,30 +279,34 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
   def optional(field: Field) = field.requiredness.isOptional
 
   def scalaType(field: Field) = {
-    val typ = rawType(field)
+    val typ = rawType(field.fieldType)
     if (optional(field)) s"Option[$typ]"
     else                 typ
   }
 
-  def rawType(field: Field) = field.fieldType match {
-    case TBool   => "Boolean"
-    case TByte   => "Byte"
-    case TI16    => "Short"
-    case TI32    => "Int"
-    case TI64    => "Long"
-    case TDouble => "Double"
-    case TString => "String"
-    case t       => throw new Exception(s"Unsupported field type: $t")
+  def rawType(typ: FieldType): String = typ match {
+    case TBool                        => "Boolean"
+    case TByte                        => "Byte"
+    case TI16                         => "Short"
+    case TI32                         => "Int"
+    case TI64                         => "Long"
+    case TDouble                      => "Double"
+    case TString                      => "String"
+    case ListType(elemType, _)        => s"Seq[${rawType(elemType)}]"
+    case MapType(keyType, valType, _) => s"Map[${rawType(keyType)}, ${rawType(valType)}]"
+    case t                            => throw new Exception(s"Unsupported field type: $t")
   }
 
-  def constType(field: Field) = field.fieldType match {
-    case TBool   => "BOOL"
-    case TByte   => "BYTE"
-    case TI16    => "I16"
-    case TI32    => "I32"
-    case TI64    => "I64"
-    case TDouble => "DOUBLE"
-    case TString => "STRING"
+  def constType(typ: FieldType) = typ match {
+    case TBool            => "BOOL"
+    case TByte            => "BYTE"
+    case TI16             => "I16"
+    case TI32             => "I32"
+    case TI64             => "I64"
+    case TDouble          => "DOUBLE"
+    case TString          => "STRING"
+    case ListType(_, _)   => "LIST"
+    case MapType(_, _, _) => "MAP"
     case t       => throw new Exception(s"Unsupported field type: $t")
   }
 
@@ -242,6 +321,6 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
     if (optional(field)) "None" else default
   }
 
-  def readThriftName(field: Field)  = "read" + field.fieldType.toString.tail
-  def writeThriftName(field: Field) = "write" + field.fieldType.toString.tail
+  def readThriftName(typ: FieldType)  = "read" + typ.toString.tail
+  def writeThriftName(typ: FieldType) = "write" + typ.toString.tail
 }

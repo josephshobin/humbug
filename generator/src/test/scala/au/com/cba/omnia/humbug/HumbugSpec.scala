@@ -28,17 +28,35 @@ class HumbugSpec extends Spec { def is = s2"""
 Humbug
 ======
 
-  Can generate a valid Thrift struct from a thrift file $roundtrip
+  Can generate a valid Thrift struct from a thrift file                            $roundtrip
+  Can generate a valid Thrift struct with list fields                              $list
+  Can generate a valid Thrift struct with map fields                               $map
+  Can generate a valid Thrift struct with nested complex fields                    $nested
   Can generate a valid Thrift struct from a thrift file with more than 255 members $large
-  Product element returns the correct member $productElement
+  Product element returns the correct member                                       $productElement
 
 """
 
-  implicit val codec      = CompactScalaCodec[Types](Types)
-  implicit val codecLarge = CompactScalaCodec[Large](Large)
+  implicit val codec       = CompactScalaCodec[Types](Types)
+  implicit val codecList   = CompactScalaCodec[Listish](Listish)
+  implicit val codecMap    = CompactScalaCodec[Mapish](Mapish)
+  implicit val codecNested = CompactScalaCodec[Nested](Nested)
+  implicit val codecLarge  = CompactScalaCodec[Large](Large)
 
   def roundtrip = prop { (c: Types) =>
     codec.invert(codec(c)) must_== Success(c)
+  }
+
+  def list = prop { (c: Listish) =>
+    codecList.invert(codecList(c)) must_== Success(c)
+  }
+
+  def map = prop { (c: Mapish) =>
+    codecMap.invert(codecMap(c)) must_== Success(c)
+  }
+
+  def nested = prop { (c: Nested) =>
+    codecNested.invert(codecNested(c)) must_== Success(c)
   }
 
   def productElement = prop { (c: Types) =>
