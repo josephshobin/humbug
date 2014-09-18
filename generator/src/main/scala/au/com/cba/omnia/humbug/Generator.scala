@@ -160,25 +160,23 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
   }
 
   def generateFieldWriteCode(field: Field) = {
-    s"""  private def ${writeFieldName(field)}(item: ${scalaType(field)}, _oprot: TProtocol): Unit = {
-    ${if (optional(field)) "item.foreach { item => " else ""}
+    s"  private def ${writeFieldName(field)}(item: ${scalaType(field)}, _oprot: TProtocol): Unit = {" +
+    wrapWhen(optional(field), s => s"item.foreach { item => $s }")(s"""
     _oprot.writeFieldBegin(new TField("${field.originalName}", TType.${constType(field.fieldType)}, ${field.index}))
     ${generateElementWriteCode("item", field.fieldType)}
     _oprot.writeFieldEnd()
-    ${if (optional(field)) "}" else ""}
-  }
-  """
+    """) +
+    "  }"
   }
 
   def generateElementWriteCode(name: String, typ: FieldType): String = typ match {
     case TByte | TI16 | TI32 | TI64 | TDouble | TBool | TString =>
       s"_oprot.${writeThriftName(typ)}($name)"
     case ListType(eltType, _) =>
-      val innerVal   = name + "Elem"
-      val innerWrite = generateElementWriteCode(innerVal, eltType)
+      val innerWrite = generateElementWriteCode("_elem", eltType)
       s"""
       _oprot.writeListBegin(new TList(TType.${constType(eltType)}, ${name}.size))
-      ${name}.foreach {$innerVal => $innerWrite }
+      ${name}.foreach { _elem => $innerWrite }
       _oprot.writeListEnd()
       """
     case MapType(keyType, valType, _) =>
@@ -197,9 +195,7 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
 
   def generateFieldReadCode(field: Field) = {
     val ttype = "TType." + constType(field.fieldType)
-    val read  =
-      if (optional(field)) s"Option(${generateElementReadCode(field.fieldType)})"
-      else                 generateElementReadCode(field.fieldType)
+    val read  = wrapWhen(optional(field), s => s"Option($s)")(generateElementReadCode(field.fieldType))
     
     s"""  private def ${readFieldName(field)}(_typ: Byte, _iprot: TProtocol): ${scalaType(field)} = _typ match {
     case $ttype => $read
@@ -280,8 +276,7 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
 
   def scalaType(field: Field) = {
     val typ = rawType(field.fieldType)
-    if (optional(field)) s"Option[$typ]"
-    else                 typ
+    wrapWhen(optional(field), s => s"Option[$s]")(typ)
   }
 
   def rawType(typ: FieldType): String = typ match {
@@ -323,4 +318,7 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
 
   def readThriftName(typ: FieldType)  = "read" + typ.toString.tail
   def writeThriftName(typ: FieldType) = "write" + typ.toString.tail
+
+  def wrapWhen(cond: Boolean, wrapper: String => String)(content: String): String =
+    if (cond) wrapper(content) else content
 }
