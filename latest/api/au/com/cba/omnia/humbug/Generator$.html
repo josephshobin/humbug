@@ -39,7 +39,7 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/CommBank/humbug/tree/609c881ca816afd673fdb4c2683862ae2946fe5a//generator/src/main/scala/au/com/cba/omnia/humbug/Generator.scala" target="_blank">Generator.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/CommBank/humbug/tree/306628694394e82fe5d7e3e3ee0f7c4ef7635a6c//generator/src/main/scala/au/com/cba/omnia/humbug/Generator.scala" target="_blank">Generator.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -183,15 +183,15 @@
               
         </dd></dl></div>
     </li><li name="au.com.cba.omnia.humbug.Generator#constType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="constType(field:com.twitter.scrooge.ast.Field):String"></a>
-      <a id="constType(Field):String"></a>
+      <a id="constType(typ:com.twitter.scrooge.ast.FieldType):String"></a>
+      <a id="constType(FieldType):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">constType</span><span class="params">(<span name="field">field: <span class="extype" name="com.twitter.scrooge.ast.Field">Field</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">constType</span><span class="params">(<span name="typ">typ: <span class="extype" name="com.twitter.scrooge.ast.FieldType">FieldType</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       </h4>
       
@@ -263,6 +263,32 @@
       </span>
       <span class="symbol">
         <span class="name">generateDoc</span><span class="params">(<span name="doc">doc: <span class="extype" name="com.twitter.scrooge.ast.Document">Document</span></span>)</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
+      </span>
+      </h4>
+      
+    </li><li name="au.com.cba.omnia.humbug.Generator#generateElementReadCode" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="generateElementReadCode(typ:com.twitter.scrooge.ast.FieldType):String"></a>
+      <a id="generateElementReadCode(FieldType):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">generateElementReadCode</span><span class="params">(<span name="typ">typ: <span class="extype" name="com.twitter.scrooge.ast.FieldType">FieldType</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="au.com.cba.omnia.humbug.Generator#generateElementWriteCode" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="generateElementWriteCode(name:String,typ:com.twitter.scrooge.ast.FieldType):String"></a>
+      <a id="generateElementWriteCode(String,FieldType):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">generateElementWriteCode</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="typ">typ: <span class="extype" name="com.twitter.scrooge.ast.FieldType">FieldType</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
       
@@ -353,7 +379,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">generateFieldWriteCode</span><span class="params">(<span name="field">field: <span class="extype" name="com.twitter.scrooge.ast.Field">Field</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">generateFieldWriteCode</span><span class="params">(<span name="field">field: <span class="extype" name="com.twitter.scrooge.ast.Field">Field</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       </h4>
       
@@ -488,15 +514,15 @@
       </h4>
       
     </li><li name="au.com.cba.omnia.humbug.Generator#rawType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="rawType(field:com.twitter.scrooge.ast.Field):String"></a>
-      <a id="rawType(Field):String"></a>
+      <a id="rawType(typ:com.twitter.scrooge.ast.FieldType):String"></a>
+      <a id="rawType(FieldType):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">rawType</span><span class="params">(<span name="field">field: <span class="extype" name="com.twitter.scrooge.ast.Field">Field</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">rawType</span><span class="params">(<span name="typ">typ: <span class="extype" name="com.twitter.scrooge.ast.FieldType">FieldType</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
       
@@ -514,15 +540,15 @@
       </h4>
       
     </li><li name="au.com.cba.omnia.humbug.Generator#readThriftName" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="readThriftName(field:com.twitter.scrooge.ast.Field):String"></a>
-      <a id="readThriftName(Field):String"></a>
+      <a id="readThriftName(typ:com.twitter.scrooge.ast.FieldType):String"></a>
+      <a id="readThriftName(FieldType):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">readThriftName</span><span class="params">(<span name="field">field: <span class="extype" name="com.twitter.scrooge.ast.Field">Field</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">readThriftName</span><span class="params">(<span name="typ">typ: <span class="extype" name="com.twitter.scrooge.ast.FieldType">FieldType</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       </h4>
       
@@ -635,6 +661,19 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="au.com.cba.omnia.humbug.Generator#wrapWhen" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="wrapWhen(cond:Boolean,wrapper:String=&gt;String)(content:String):String"></a>
+      <a id="wrapWhen(Boolean,(String)⇒String)(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wrapWhen</span><span class="params">(<span name="cond">cond: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="wrapper">wrapper: (<span class="extype" name="scala.Predef.String">String</span>) ⇒ <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span name="content">content: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4>
+      
     </li><li name="au.com.cba.omnia.humbug.Generator#writeFieldName" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="writeFieldName(field:com.twitter.scrooge.ast.Field):String"></a>
       <a id="writeFieldName(Field):String"></a>
@@ -649,15 +688,15 @@
       </h4>
       
     </li><li name="au.com.cba.omnia.humbug.Generator#writeThriftName" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="writeThriftName(field:com.twitter.scrooge.ast.Field):String"></a>
-      <a id="writeThriftName(Field):String"></a>
+      <a id="writeThriftName(typ:com.twitter.scrooge.ast.FieldType):String"></a>
+      <a id="writeThriftName(FieldType):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">writeThriftName</span><span class="params">(<span name="field">field: <span class="extype" name="com.twitter.scrooge.ast.Field">Field</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">writeThriftName</span><span class="params">(<span name="typ">typ: <span class="extype" name="com.twitter.scrooge.ast.FieldType">FieldType</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       </h4>
       
