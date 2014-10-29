@@ -28,9 +28,10 @@ object HumbugSBT extends Plugin {
   def compile(
     log: Logger,
     outputDir: File,
-    thriftFiles: Set[File]
+    thriftFiles: Set[File],
+    validators: Seq[ThriftValidator]
   ) {
-    Main.generate(outputDir.getAbsolutePath, thriftFiles.map(_.getAbsolutePath).toList)
+    Main.validateAndGenerate(outputDir.getAbsolutePath, thriftFiles.map(_.getAbsolutePath).toList, validators)
   }
 
   def filter(dependencies: Classpath, whitelist: Set[String]): Classpath = {
@@ -82,6 +83,11 @@ object HumbugSBT extends Plugin {
     "generate scala code from thrift files using humbug"
   )
 
+  val humbugThriftValidators = SettingKey[Seq[ThriftValidator]](
+    "humbug-thrift-validators",
+    "list of validators to apply on parsed com.twitter.scrooge.ast.Document"
+  )
+
   // Dependencies included in the `thrift` configuration will be used
   // in both compile and test.
   val thriftConfig = config("thrift")
@@ -96,6 +102,7 @@ object HumbugSBT extends Plugin {
     humbugThriftExternalSourceFolder <<= (target) { _ / "thrift_external" },
     humbugThriftOutputFolder <<= (sourceManaged) { identity },
     humbugThriftDependencies := Seq(),
+    humbugThriftValidators := Seq(),
     humbugIsDirty := true,
 
     // complete list of source files
@@ -144,12 +151,13 @@ object HumbugSBT extends Plugin {
       streams,
       humbugIsDirty,
       humbugThriftSources,
-      humbugThriftOutputFolder
-    ) map { (out, isDirty, sources, outputDir) =>
+      humbugThriftOutputFolder,
+      humbugThriftValidators
+    ) map { (out, isDirty, sources, outputDir, validators) =>
       // for some reason, sbt sometimes calls us multiple times, often with no source files.
       if (isDirty && !sources.isEmpty) {
         out.log.info("Generating humbug thrift for %s ...".format(sources.mkString(", ")))
-        compile(out.log, outputDir, sources.toSet)
+        compile(out.log, outputDir, sources.toSet, validators)
       }
       (outputDir ** "*.scala").get.toSeq
     },
@@ -161,3 +169,5 @@ object HumbugSBT extends Plugin {
     inConfig(Test)(genThriftSettings) ++
     inConfig(Compile)(genThriftSettings)
 }
+
+

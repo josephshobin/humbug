@@ -11,18 +11,17 @@
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
-import au.com.cba.omnia.humbug.HumbugSBT
-import au.com.cba.omnia.humbug.test.DummyNeverFailingValidator
 
-version := "0.1"
+package au.com.cba.omnia.humbug.test
 
-scalaVersion := "2.10.2"
+import au.com.cba.omnia.humbug.ThriftValidator
+import com.twitter.scrooge.ast.Document
 
-//append DummyNeverFailingValidator to check that sbt doesn't complain
-HumbugSBT.humbugSettings ++
-Seq(HumbugSBT.humbugThriftValidators in Test += new DummyNeverFailingValidator,
-  HumbugSBT.humbugThriftValidators in Compile += new DummyNeverFailingValidator)
+//validators are in src/main to be able to use them in plugin/sbt-test
+class DummyAlwaysFailingValidator extends ThriftValidator {
+  def validate(thriftDoc: Document): Seq[ThriftValidator.ErrorMsg] = Seq("invalid thrift struct")
+}
 
-libraryDependencies ++= depend.scrooge() ++ Seq(
-  "au.com.cba.omnia" %% "humbug-core" % System.getProperty("plugin.version")
-)
+class DummyNeverFailingValidator extends ThriftValidator {
+  def validate(thriftDoc: Document): Seq[ThriftValidator.ErrorMsg] = Seq()
+}

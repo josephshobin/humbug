@@ -14,6 +14,8 @@
 
 package au.com.cba.omnia.humbug
 
+import java.io.File
+
 import scala.util.Success
 
 import com.twitter.bijection.scrooge.CompactScalaCodec
@@ -33,6 +35,7 @@ Humbug
   Can generate a valid Thrift struct with map fields                               $map
   Can generate a valid Thrift struct with nested complex fields                    $nested
   Can generate a valid Thrift struct from a thrift file with more than 255 members $large
+  Can throw an exception when custom validation fails                              $invalid
   Product element returns the correct member                                       $productElement
 
 """
@@ -71,6 +74,13 @@ Humbug
     c.productElement(6) must_== c.byteField
     c.productElement(7) must_== c.optStringField
     c.productElement(8) must_== c.optDoubleField
+  }
+
+  def invalid = {
+    Main.validateAndGenerate("doesnt-matter",
+      List("generator/src/test/thrift/Invalid.thrift"),
+      Seq(new DummyAlwaysFailingValidator)
+    ) must throwAn[ThriftValidationException]
   }
 
   def large = {
