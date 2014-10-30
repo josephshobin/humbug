@@ -38,18 +38,22 @@ object Main {
 
   def validateAndGenerate(dst: String, thriftFiles: List[String], validators: Seq[ThriftValidator]): Unit = {
     val docs = thriftFiles.map(parseFile)
-    val validationErrorsPerFile = thriftFiles.zip(docs).map {
-      case (path, doc) =>
-        (path, validate(doc, validators))
-    } toMap
+    val validationErrorsPerFile = thriftFiles.zip(docs).flatMap {
+      case (path, doc) => {
+        val errors = validate(doc, validators.toList)
+        if (errors.isEmpty) List.empty
+        else List((path, errors))
+      }
+    }
 
-    validationErrorsPerFile.find(!_._2.isEmpty) match {
-      case Some(_) => throwValidationException(validationErrorsPerFile)
-      case None => docs.foreach(saveThriftAsScala(new File(dst), _))
+    if (validationErrorsPerFile.isEmpty) {
+      docs.foreach(saveThriftAsScala(new File(dst), _))
+    } else {
+      throwValidationException(validationErrorsPerFile)
     }
   }
 
-  protected def validate(doc: Document, validators: Seq[ThriftValidator]): Seq[ThriftValidator.ErrorMsg] = {
+  protected def validate(doc: Document, validators: List[ThriftValidator]): List[ThriftValidator.ErrorMsg] = {
     validators.flatMap(_.validate(doc))
   }
 
@@ -78,10 +82,10 @@ object Main {
     writer.close()
   }
 
-  protected def throwValidationException(validationErrorsPerFile: Map[String, Seq[String]])= {
+  protected def throwValidationException(validationErrorsPerFile: List[(String, List[String])]) = {
     val builder = new StringBuilder("\n")
 
-    validationErrorsPerFile.filter(!_._2.isEmpty).foreach {
+    validationErrorsPerFile.foreach {
       case (filepath, errors) =>
         builder.append(filepath + "\n")
         errors.map("  " + _ + "\n").foreach(builder.append)

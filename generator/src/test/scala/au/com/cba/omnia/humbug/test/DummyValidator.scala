@@ -15,13 +15,7 @@
 package au.com.cba.omnia.humbug.test
 
 import au.com.cba.omnia.humbug.ThriftValidator
-import com.twitter.scrooge.ast.Document
 
-//validators are in src/main to be able to use them in plugin/sbt-test
-class DummyAlwaysFailingValidator extends ThriftValidator {
-  def validate(thriftDoc: Document): Seq[ThriftValidator.ErrorMsg] = Seq("invalid thrift struct")
-}
-
-class DummyNeverFailingValidator extends ThriftValidator {
-  def validate(thriftDoc: Document): Seq[ThriftValidator.ErrorMsg] = Seq()
+object DummyValidators {
+  val failAll = ThriftValidator(_ => List("invalid thrift struct (dummy msg)"))
 }

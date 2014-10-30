@@ -16,11 +16,9 @@ package au.com.cba.omnia.humbug
 
 import com.twitter.scrooge.ast.{Field, Document}
 
-trait ThriftValidator {
-  import ThriftValidator.ErrorMsg
+import ThriftValidator.ErrorMsg
 
-  def validate(thriftDoc: Document): Seq[ErrorMsg]
-}
+case class ThriftValidator(validate: Document => List[ErrorMsg])
 
 object ThriftValidator {
   type ErrorMsg = String

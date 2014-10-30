@@ -12,16 +12,12 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 import au.com.cba.omnia.humbug.HumbugSBT
-import au.com.cba.omnia.humbug.test.DummyNeverFailingValidator
 
 version := "0.1"
 
 scalaVersion := "2.10.2"
 
-//append DummyNeverFailingValidator to check that sbt doesn't complain
-HumbugSBT.humbugSettings ++
-Seq(HumbugSBT.humbugThriftValidators in Test += new DummyNeverFailingValidator,
-  HumbugSBT.humbugThriftValidators in Compile += new DummyNeverFailingValidator)
+HumbugSBT.humbugSettings
 
 libraryDependencies ++= depend.scrooge() ++ Seq(
   "au.com.cba.omnia" %% "humbug-core" % System.getProperty("plugin.version")

@@ -14,9 +14,9 @@
 
 package au.com.cba.omnia.humbug
 
-import java.io.File
-
 import scala.util.Success
+
+import java.io.File
 
 import com.twitter.bijection.scrooge.CompactScalaCodec
 
@@ -79,7 +79,7 @@ Humbug
   def invalid = {
     Main.validateAndGenerate("doesnt-matter",
       List("generator/src/test/thrift/Invalid.thrift"),
-      Seq(new DummyAlwaysFailingValidator)
+      Seq(DummyValidators.failAll)
     ) must throwAn[ThriftValidationException]
   }
 

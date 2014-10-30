@@ -1,3 +1,7 @@
 > compile
 $ exists target/scala-2.10/src_managed/main/au/com/cba/omnia/humbug/test/Customer.scala
 $ exists target/scala-2.10/src_managed/main/au/com/cba/omnia/humbug/test/Large.scala
+
+> 'set au.com.cba.omnia.humbug.HumbugSBT.humbugThriftValidators in Compile += au.com.cba.omnia.humbug.ThriftValidator(_ => List("failure"))'
+
+-> compile
