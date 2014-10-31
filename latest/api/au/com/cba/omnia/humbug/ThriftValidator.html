@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>HumbugThriftStruct - au.com.cba.omnia.humbug.HumbugThriftStruct</title>
-          <meta name="description" content="HumbugThriftStruct - au.com.cba.omnia.humbug.HumbugThriftStruct" />
-          <meta name="keywords" content="HumbugThriftStruct au.com.cba.omnia.humbug.HumbugThriftStruct" />
+          <title>ThriftValidator - au.com.cba.omnia.humbug.ThriftValidator</title>
+          <meta name="description" content="ThriftValidator - au.com.cba.omnia.humbug.ThriftValidator" />
+          <meta name="keywords" content="ThriftValidator au.com.cba.omnia.humbug.ThriftValidator" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../../index.html';
-            var hash = 'au.com.cba.omnia.humbug.HumbugThriftStruct';
+            var hash = 'au.com.cba.omnia.humbug.ThriftValidator';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -24,30 +24,24 @@
         </head>
         <body class="type">
       <div id="definition">
-        <img src="../../../../../lib/trait_big.png" />
+        <a href="ThriftValidator$.html" title="Go to companion"><img src="../../../../../lib/class_to_object_big.png" /></a>
         <p id="owner"><a href="../../../../package.html" class="extype" name="au">au</a>.<a href="../../../package.html" class="extype" name="au.com">com</a>.<a href="../../package.html" class="extype" name="au.com.cba">cba</a>.<a href="../package.html" class="extype" name="au.com.cba.omnia">omnia</a>.<a href="package.html" class="extype" name="au.com.cba.omnia.humbug">humbug</a></p>
-        <h1>HumbugThriftStruct</h1>
+        <h1><a href="ThriftValidator$.html" title="Go to companion">ThriftValidator</a></h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">trait</span>
+        <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">HumbugThriftStruct</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">ThriftValidator</span><span class="params">(<span name="validate">validate: (<span class="extype" name="com.twitter.scrooge.ast.Document">Document</span>) ⇒ <span class="extype" name="scala.List">List</span>[<a href="ThriftValidator$.html#ErrorMsg=String" class="extmbr" name="au.com.cba.omnia.humbug.ThriftValidator.ErrorMsg">ErrorMsg</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>HumbugThriftStruct is a marker trait to indicate that a thrift struct was generated using
-the Humbug generator. This means:
- * it has an empty constructor to avoid the JVM 254 method parameters limit.
- * that the fields of the thrift struct are mutable and are used to construct it.
- * that it has members named after the fields in the thrift file with getters and setters.
- * that is has getters and setters <code>_1</code> corresponding to the index of a field.
-</p></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="au.com.cba.omnia.humbug.HumbugThriftStruct">HumbugThriftStruct</a> with <span class="extype" name="com.twitter.scrooge.ThriftStruct">ThriftStruct</span></dd><dt>Source</dt><dd><a href="https://github.com/CommBank/humbug/tree/de2176c53fbdf4915d9e8da40a432c407937ca8c//core/src/main/scala/au/com/cba/omnia/humbug/HumbugThriftStruct.scala" target="_blank">HumbugThriftStruct.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/CommBank/humbug/tree/de2176c53fbdf4915d9e8da40a432c407937ca8c//generator/src/main/scala/au/com/cba/omnia/humbug/ThriftValidator.scala" target="_blank">ThriftValidator.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -65,7 +59,7 @@ the Humbug generator. This means:
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="au.com.cba.omnia.humbug.HumbugThriftStruct"><span>HumbugThriftStruct</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="au.com.cba.omnia.humbug.ThriftValidator"><span>ThriftValidator</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -83,7 +77,23 @@ the Humbug generator. This means:
 
       <div id="template">
         <div id="allMembers">
-        
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="au.com.cba.omnia.humbug.ThriftValidator#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(validate:com.twitter.scrooge.ast.Document=&gt;List[au.com.cba.omnia.humbug.ThriftValidator.ErrorMsg]):au.com.cba.omnia.humbug.ThriftValidator"></a>
+      <a id="&lt;init&gt;:ThriftValidator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ThriftValidator</span><span class="params">(<span name="validate">validate: (<span class="extype" name="com.twitter.scrooge.ast.Document">Document</span>) ⇒ <span class="extype" name="scala.List">List</span>[<a href="ThriftValidator$.html#ErrorMsg=String" class="extmbr" name="au.com.cba.omnia.humbug.ThriftValidator.ErrorMsg">ErrorMsg</a>]</span>)</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
 
         
 
@@ -201,19 +211,6 @@ the Humbug generator. This means:
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="equals(x$1:Any):Boolean"></a>
-      <a id="equals(Any):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -243,19 +240,6 @@ the Humbug generator. This means:
       </span>
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="hashCode():Int"></a>
-      <a id="hashCode():Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -324,19 +308,19 @@ the Humbug generator. This means:
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="toString():String"></a>
-      <a id="toString():String"></a>
+    </li><li name="au.com.cba.omnia.humbug.ThriftValidator#validate" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="validate:com.twitter.scrooge.ast.Document=&gt;List[au.com.cba.omnia.humbug.ThriftValidator.ErrorMsg]"></a>
+      <a id="validate:(Document)⇒List[ErrorMsg]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">validate</span><span class="result">: (<span class="extype" name="com.twitter.scrooge.ast.Document">Document</span>) ⇒ <span class="extype" name="scala.List">List</span>[<a href="ThriftValidator$.html#ErrorMsg=String" class="extmbr" name="au.com.cba.omnia.humbug.ThriftValidator.ErrorMsg">ErrorMsg</a>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -403,7 +387,15 @@ the Humbug generator. This means:
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.Product">
+              <h3>Inherited from <span class="extype" name="scala.Product">Product</span></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <span class="extype" name="scala.Equals">Equals</span></h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
