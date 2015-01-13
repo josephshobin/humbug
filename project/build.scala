@@ -24,9 +24,10 @@ object build extends Build {
     "compile-thrift", "generate thrift needed for tests")
 
   lazy val standardSettings =
-    Defaults.defaultSettings ++
+    Defaults.coreDefaultSettings ++
     uniformDependencySettings ++
-    uniform.docSettings("https://github.com/CommBank/humbug")
+    uniform.docSettings("https://github.com/CommBank/humbug") ++
+    Seq(updateOptions := updateOptions.value.withCachedResolution(true))
 
   lazy val all = Project(
     id = "all",
@@ -70,7 +71,7 @@ object build extends Build {
           Seq(
             "com.twitter"      %% "scrooge-generator"  % depend.versions.scrooge,
             "com.twitter"      %% "bijection-scrooge"  % depend.versions.bijection      % "test",
-            "au.com.cba.omnia" %% "omnia-test"         % "2.1.0-20140604032817-d3b19f6" % "test"
+            "au.com.cba.omnia" %% "omnia-test"         % "2.1.0-20150113040614-4f96d2b" % "test"
           )
       )
   ).dependsOn(core)
