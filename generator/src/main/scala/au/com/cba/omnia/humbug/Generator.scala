@@ -160,13 +160,18 @@ ${fields.map(f => generateFieldWriteCode(f) + "\n" + generateFieldReadCode(f)).m
   }
 
   def generateFieldWriteCode(field: Field) = {
-    s"  private def ${writeFieldName(field)}(item: ${scalaType(field)}, _oprot: TProtocol): Unit = {" +
-    wrapWhen(optional(field), s => s"item.foreach { item => $s }")(s"""
-    _oprot.writeFieldBegin(new TField("${field.originalName}", TType.${constType(field.fieldType)}, ${field.index}))
-    ${generateElementWriteCode("item", field.fieldType)}
-    _oprot.writeFieldEnd()
-    """) +
-    "  }"
+    s"  private def ${writeFieldName(field)}(item: ${scalaType(field)}, _oprot: TProtocol): Unit = " +
+    wrapWhen(optional(field), s =>
+      "item match {\n"               +
+      "   case None       => {}\n"   +
+     s"   case Some(item) => $s\n" +
+      "   }\n"
+    )( 
+        "{\n" +
+     s"""    _oprot.writeFieldBegin(new TField("${field.originalName}", TType.${constType(field.fieldType)},${field.index}))\n""" +
+       s"    ${generateElementWriteCode("item", field.fieldType)}\n" +
+        "    _oprot.writeFieldEnd()"
+    ) + "  }"
   }
 
   def generateElementWriteCode(name: String, typ: FieldType): String = typ match {
