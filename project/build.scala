@@ -26,6 +26,7 @@ object build extends Build {
   lazy val standardSettings =
     Defaults.coreDefaultSettings ++
     uniformDependencySettings ++
+    strictDependencySettings ++
     uniform.docSettings("https://github.com/CommBank/humbug") ++
     Seq(updateOptions := updateOptions.value.withCachedResolution(true))
 
@@ -53,7 +54,7 @@ object build extends Build {
         libraryDependencies ++=
           Seq(
             "com.twitter"      %% "scrooge-core"        % depend.versions.scrooge,
-            "org.apache.thrift" % "libthrift"           % "0.8.0" % "provided"
+            "org.apache.thrift" % "libthrift"           % "0.9.0-cdh5-2" % "provided"
           )
       )
   )
